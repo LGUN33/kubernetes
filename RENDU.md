@@ -42,19 +42,22 @@
 
 9. Sur quels nœuds se trouvent vos 3 réplicas ? Collez la sortie de `kubectl get pods -l app=site -o wide`.
    ```
-
+ NODE   READINESS GATES
+site-fc465f957-284q2   1/1     Running   0          2m41s   10.42.0.8   k3d-lab-server-0   <none>           <none>
+site-fc465f957-j6xr9   1/1     Running   0          2m28s   10.42.3.7   k3d-lab-agent-1    <none>           <none>
+site-fc465f957-kr9gg   1/1     Running   0          2m36s   10.42.1.8   k3d-lab-agent-0    <none>           <none>
    ```
 10. Avec l'image `nginx:9.99`, quel statut avait le pod ? Quelle commande vous a donné la cause ?
-    >
+    >Le pod avait le statut **`ErrImagePull`** puis **`ImagePullBackOff`** (tag d'image inexistant). La commande **`kubectl describe pod <nom-du-pod>`** (dans la section `Events`) a donné la cause exacte.
 11. Pendant la panne, le site restait-il accessible ? Pourquoi ?
-    >
+    >**Oui.** Par défaut, un Deployment utilise la stratégie **`RollingUpdate`** : Kubernetes conserve les anciens pods actifs tant que les nouveaux ne sont pas prêts (`Ready`). La mise à jour étant bloquée sur le nouveau pod en erreur, les anciens pods ont continué à servir le site sans interruption.
 
 ## Exercice 6 — Portainer & Mario
 
 12. URL publique de votre Mario :
-    >
+    >https://laughing-system-q77ppx55gqrx34prj-8585.app.github.dev/
 13. Retrouvez le Deployment `mario` en ligne de commande. Portainer et `kubectl` parlent-ils au même composant ? Lequel ?
-    >
+    >**Oui**, Portainer et `kubectl` communiquent exactement avec le même composant central : le **`kube-apiserver`** (l'API Server du Control Plane Kubernetes).
 
 ## Bonus (facultatif)
 
